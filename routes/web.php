@@ -16,11 +16,11 @@ Route::get('/', 'HomeController@test');
 Route::get('toflokzu/{id?}', 'HomeController@sendToFlokzu');
 
 Route::post('todataejecution', 'HomeController@sendtoDataEjecucion');
-Route::get('todatainvoice', 'HomeController@sendtoDataFacture');
+Route::post('todatainvoice', 'HomeController@sendtoDataFacture');
 
 
 Route::post('fromcolliers', 'HomeController@productComerccial');
-Route::get('fromcaseres', 'HomeController@productNonComercial');
+Route::post('fromcaseres', 'HomeController@productNonComercial');
 
 
 

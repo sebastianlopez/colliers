@@ -18,6 +18,8 @@ class DataCrm
     {
         $this->vt = new WSClient('https://datacrm.la/datacrm/collierscolombia/',
             'Rhiss', 'RRR8gf60uEaSMHXU');
+       //$this->vt = new WSClient('https://develop.datacrm.la/mrivera/mrwhatsaoo6325c/',
+         //   'Rhiss', 'RRR8gf60uEaSMHXU');
     }
 
     //==================================== CLIENTES ====================================//
@@ -261,11 +263,11 @@ class DataCrm
                     'bill_street'      => !empty($data['direccion_cliente']) ? $data['direccion_cliente'] : 'N/A', //REQUIRED
                     'cf_1050'          => !empty($data['Ciudad_cliente']) ? $data['Ciudad_cliente'] : 'COLOMBIA', //Ciudad del Cliente REQUIRED
                     'cf_1048'          => $data['Departamento_cliente'], //Departamento del Cliente
-                    'cf_1052'          => $data['pais_cliente'], //PaÃ­s del Cliente
+                    'cf_1052'          => $data['pais_cliente'], //Pa¨ªs del Cliente
                     'assigned_user_id' => '19x66', // crm1@casainglesa.co  //REQUIRED
                     'cf_1775'          => 'Sin segmento', //Segmento Cliente CI
                     'cf_1777'          => 'Otro', //Origen del Cliente  REQUIRED
-                    'cf_1783'          =>  !empty($data['Zona']) ? str_replace('-',' ', $data['Zona']) : 'PENDIENTE', //ZonificaciÃ³n REQUIRED
+                    'cf_1783'          =>  !empty($data['Zona']) ? str_replace('-',' ', $data['Zona']) : 'PENDIENTE', //Zonificaci¨®n REQUIRED
                     'cf_1443'          => 1, // Enviado al ERP
                 ];
 
@@ -342,9 +344,9 @@ class DataCrm
      * @return array
      * Created by <Rhiss.net>
      */
-    public function getProduct($description, $referencia)
+    public function getProduct( $referencia )
     {
-        $client = $this->vt->entities->findOne('Products', ['cf_1439' => $description, 'cf_1022' => $referencia]);
+        $client = $this->vt->entities->findOne('Products', ['cf_1542' => $referencia]);
 
         return $client;
     }
@@ -398,9 +400,8 @@ class DataCrm
             $msg = [
                 'method' => 'saveProduct',
                 'data'   => [
-                    'reference'   => $data['Referencia'],
-                    'description' => $data['Descripcion_Producto'],
-                ],
+                    'reference'   => (isset($data['Referencia']))? $data['Referencia']:'',
+                                  ],
                 'error'  => $e->getMessage()
             ];
             Log::channel('datacrm')->error(json_encode($msg));
@@ -437,7 +438,7 @@ class DataCrm
     //==================================== COTIZACIONES ====================================//
 
     /**
-     * Busca una cotizaciÃ³n en datacrm por su ID.
+     * Busca una cotizaci¨®n en datacrm por su ID.
      *
      * @param $id
      *
@@ -468,7 +469,7 @@ class DataCrm
     }
 
     /**
-     * Actualiza un cotizaciÃ³n en datacrm.
+     * Actualiza un cotizaci¨®n en datacrm.
      *
      * @param $data
      *
@@ -704,7 +705,7 @@ class DataCrm
      * @param integer $offset
      * @return void
      */
-    public function getallPotencials($limit =1, $offset = 0){
+    public function getallPotencials($limit = 100, $offset = 0){
 
         $potenicials = $this->vt->entities->findMany('Potentials', [], ['*'], $limit, $offset);
         return $potenicials;
@@ -834,7 +835,7 @@ class DataCrm
             $potential = $this->vt->entities->updateOne('Potentials', $data['id'], $data);
         } catch (\Exception $e) {
             $msg = ['method' => 'updatePotential', 'data' => ['id' => $data['id']], 'error' => $e->getMessage()];
-            Log::channel('datacrm')->error(json_encode($msg));
+            Log::channel('datacrm')->error(json_encode($msg).' '.json_encode($data));
         }
 
         return $potential;

@@ -22,9 +22,7 @@ class Flokzu extends Model
     {
         $this->apiKey           = '5df78a47915b71525f0a138071a158aa0b5b2a77c252a41b';
         $this->apiKeyUser       = '5e3abf8b326f3fed153af79f7e3f27f3c22ca8267bb34696';
-
         $this->XUsername        = 'sebastian@rhiss.net';
-
         $this->process_code     = 'EJC';  
         $this->invoice_process  = 'PROPFC';  
 
@@ -43,101 +41,29 @@ class Flokzu extends Model
 
         $ch = curl_init();
 
-       /* $api = $this->apiKey;
+        $api = $this->apiKey;
         if($sector == 'Residencial'){
             $api = $this->apiKey_caseres;
-        }*/
+        }
 
-
-      /*  curl_setopt($ch, CURLOPT_URL, "https://app.flokzu.com/flokzuopenapi/api/5df78a47915b71525f0a138071a158aa0b5b2a77c252a41b/instance?processCode=EJC");
+        curl_setopt($ch, CURLOPT_URL, "https://app.flokzu.com/flokzuopenapi/api/".$api."/instance?processCode=".$this->process_code);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         curl_setopt($ch, CURLOPT_HEADER, FALSE);
         curl_setopt($ch, CURLOPT_POST, TRUE);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($flokzu,true) );
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            "Content-Type: application/json",
-            "X-Api-Key:     5df78a47915b71525f0a138071a158aa0b5b2a77c252a41b",
-            "X-Username:    ".$this->XUsername,
-            "X-ForceUser:   true"
-        ));*/
-
-        $info = array(
-            "processId" => "EJC",
-            'data'      => $flokzu
-        );
-
-      //  dd(json_encode($info,JSON_UNESCAPED_UNICODE));
-
-        $headers = [
-            "Content-Type"  => "application/json",
-            "X-Api-Key"     => "5df78a47915b71525f0a138071a158aa0b5b2a77c252a41b",
-            "X-Username"    => $this->XUsername,
-            "X-ForceUser"   => true
-        ];
-
-        /*try {
-
-            $url = "https://app.flokzu.com/flokzuopenapi/api/5df78a47915b71525f0a138071a158aa0b5b2a77c252a41b/instance?processCode=EJC";
-            $url = 'https://app.flokzu.com/flokzuopenapi/api/v2/process/instance';
-
-            $client = new Client([
-                'headers' => $headers
-            ]); 
-
-            dd( json_encode($info,true));
-
-            $response = $client->request('POST', $url,[
-                'body' => json_encode($info,true)
-            ]);
-
-            dd( $response, $response->getBody()->getContents() );
-
-
-        } catch(Exception $e) {
-            dd($e->getCode(), $e->getMessage());
-            trigger_error(sprintf(
-                'Curl failed with error #%d: %s',
-                $e->getCode(), $e->getMessage()),
-                E_USER_ERROR);
-
-               
-        
-        } */
-
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, "https://app.flokzu.com/flokzuopenapi/api/v2/process/instance");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-        curl_setopt($ch, CURLOPT_HEADER, FALSE);
-
-        curl_setopt($ch, CURLOPT_POST, TRUE);
-
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($info,true));
-
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
         "Content-Type: application/json",
-        "X-Api-Key: 5df78a47915b71525f0a138071a158aa0b5b2a77c252a41b",
-        "X-Username: sebastian@rhiss.net",
-        "X-ForceUser: true"
+        "X-Api-Key:     ".$api,
+        "X-Username:    ".$this->XUsername,
+        "X-ForceUser:   true"
         ));
 
         $response = curl_exec($ch);
-
-        dd($response);
         curl_close($ch);
 
-        var_dump($response);
-
-
-       // $response = curl_exec($ch);
-      //  curl_close($ch);
-
-       // return $response;
+        return $response;
 
     }
-
-
-    
 
 
     /**
@@ -278,6 +204,7 @@ class Flokzu extends Model
     public function getValueDb($id,$db='Centros de Costos',$sector=''){
 
         $api = $this->apiKey;
+        
         if($sector == 'Residencial'){
             $api = $this->apiKey_caseres;
         }
@@ -290,6 +217,7 @@ class Flokzu extends Model
             $response = $client->request('GET', $url);
 
             return $response->getBody()->getContents() ;
+
 
 
         } catch(Exception $e) {
